@@ -6,5 +6,91 @@
 
 Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<button class="btn btn-primary" @onclick="AddStudent1">Add Student 1</button>
+<button class="btn btn-primary" @onclick="AddAStudent2Books">Add a student with 2 books</button>
+<button class="btn btn-primary" @onclick="AddABook2Students">Add a book with 2 students</button>
 
+<br />
+Status = @result
+<br />
+@code {
+
+    private string result = "ready...";
+
+    private void AddStudent1()
+    {
+        using var db = new AppDb();
+
+        var std1 = new Student();
+        std1.Name = "Student 1";
+        db.Students.Add(std1);
+        try
+        {
+            db.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            result = $"Error:{ex.Message}";
+        }
+
+        result = "Saved...";
+
+    }
+
+    private void AddAStudent2Books()
+    {
+        using var db = new AppDb();
+
+        var std1 = new Student();
+        std1.Name = "Student " + DateTime.Now.Millisecond.ToString();
+
+        var book1 = new Book();
+        book1.Title = "Book " + DateTime.Now.Millisecond.ToString();
+
+        var book2 = new Book();
+        book2.Title = "Book " + DateTime.Now.Millisecond.ToString();
+
+        std1.Books.Add(book1);
+        std1.Books.Add(book2);
+
+        db.Students.Add(std1);
+        try
+        {
+            db.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            result = $"Error:{ex.Message}";
+        }
+
+        result = "Saved...1 student and 2 books";
+
+    }
+
+    private void AddABook2Students()
+    {
+        using var db = new AppDb();
+
+        var book1 = new Book();
+        book1.Title = "Book " + DateTime.Now.Millisecond.ToString();
+
+        var std1 = new Student();
+        std1.Name = "Student " + DateTime.Now.Millisecond.ToString();
+
+
+        book1.Students.Add(std1);
+
+        db.Books.Add(book1);
+
+        try
+        {
+            db.SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            result = $"Error:{ex.Message}";
+        }
+
+        result = "Saved...1 book and 2 students";
+    }
+}
